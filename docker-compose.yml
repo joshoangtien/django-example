@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+    api-example:
+        container_name: api_example
+        build:
+            context: ./api_example
+            dockerfile: docker/api/Dockerfile
+        command: >
+            bash -c "pip install -r requirements.txt &&
+            python3 manage.py makemigrations &&
+            python3 manage.py runserver 0.0.0.0:8800"
+        environment:
+            - DJANGO_READ_ENV_FILE=True
+        volumes:
+            - "./api_example:/app_example"
+        ports:
+            - "8800:8000"
+        depends_on:
+            - "mysql8"
+
+    mysql8:
+        container_name: mysql_example
+        image: mysql:8.0
+        env_file: 
+        - ./api_example/.env
+        ports:
+        - "3300:3306"
+        volumes:
+        - ./api_example/db/mysql_init:/docker-entrypoint-initdb.d
+        - ./api_example/db/mysql_data:/var/lib/mysql
+        - ./api_example/db/my.cnf:/etc/mysql/my.cnf
+
+    phpmyadmin:
+        container_name: dr_myadmin
+        image: phpmyadmin/phpmyadmin
+        environment:
+        - PMA_ARBITRARY=1
+        - PMA_HOST=mysql_example
+        - PMA_PORT=3306
+        ports:
+        - 9900:80
+        restart: always
+        depends_on:
+        - "mysql8"
