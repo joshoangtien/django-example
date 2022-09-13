@@ -1,0 +1,12 @@
+Django==3.2.5
+django-celery-beat==2.3.0
+django-celery-results==2.3.1
+django-cors-headers==3.7.0
+django-environ==0.4.5
+django-modeladmin-reorder==0.3.1
+django-ses==1.0.1
+django-storages==1.11.1
+djangorestframework==3.12.4
+djangorestframework-jwt==1.11.0
+mysqlclient==2.0.3
+urllib3==1.25.11
